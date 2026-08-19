@@ -1,0 +1,63 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isMember(householdId) {
+      return isSignedIn() &&
+        exists(/databases/$(database)/documents/households/$(householdId)/members/$(request.auth.uid));
+    }
+
+    match /users/{uid} {
+      allow read, write: if isSignedIn() && request.auth.uid == uid;
+    }
+
+    // Invite-code -> householdId lookup, used so joining a household never
+    // requires querying households the user isn't a member of yet.
+    match /inviteCodes/{code} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update, delete: if false;
+    }
+
+    match /households/{householdId} {
+      allow create: if isSignedIn();
+      allow read, update: if isMember(householdId);
+      allow delete: if false;
+
+      match /members/{memberId} {
+        allow read: if isMember(householdId);
+        allow create: if isSignedIn() && request.auth.uid == memberId;
+        allow update: if isMember(householdId);
+        allow delete: if false;
+      }
+
+      match /rooms/{roomId} {
+        allow read, write: if isMember(householdId);
+      }
+
+      match /projects/{projectId} {
+        allow read, write: if isMember(householdId);
+      }
+
+      match /tasks/{taskId} {
+        allow read, write: if isMember(householdId);
+      }
+
+      match /checkins/{checkinId} {
+        allow read, write: if isMember(householdId);
+      }
+
+      // Append-only completed-task log powering the weekly chart/feed —
+      // entries are never edited or removed once written.
+      match /activity/{activityId} {
+        allow read, create: if isMember(householdId);
+        allow update, delete: if false;
+      }
+    }
+  }
+}

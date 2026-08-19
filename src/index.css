@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  /* calm palette (clean state) — TVA monitor teal, patinated against the bronze surface */
+  --color-calm-50: #eafbfa;
+  --color-calm-100: #c9f1ee;
+  --color-calm-300: #7cd6d0;
+  --color-calm-500: #29a29b;
+  --color-calm-600: #1f827c;
+  --color-calm-700: #1a6863;
+
+  /* dirty palette (escalates toward the TVA pruning-flame orange/red) */
+  --color-dirty-100: #ffe7c4;
+  --color-dirty-300: #f7ac57;
+  --color-dirty-500: #e87826;
+  --color-dirty-600: #c85a1d;
+  --color-dirty-700: #9c3f16;
+
+  /* neutral app surface — aged bronze, brass filing-room warmth instead of cool slate */
+  --color-ink-950: #120d08;
+  --color-ink-900: #1c150e;
+  --color-ink-800: #261c12;
+  --color-ink-700: #4a3520;
+  --color-ink-500: #9c8058;
+  --color-ink-300: #cdb082;
+  --color-ink-100: #f3e6c8;
+
+  /* TVA brass — official-seal gold for primary actions, headers, glow accents */
+  --color-brass-400: #e8b559;
+  --color-brass-500: #d99a2f;
+  --color-brass-600: #b57a1f;
+  --color-brass-700: #8f5f18;
+
+  --font-sans: 'Bahnschrift', 'Segoe UI', system-ui, Roboto, sans-serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background:
+    radial-gradient(ellipse 120% 80% at 50% -10%, rgba(217, 154, 47, 0.08), transparent 60%),
+    var(--color-ink-950);
+  color: var(--color-ink-100);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-ink-700);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
